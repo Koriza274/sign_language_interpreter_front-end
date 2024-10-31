@@ -40,7 +40,7 @@ def upload(file: UploadFile = File(...)):
     finally:
         letter = predict_image(file_location)
         file.file.close()
-        file.file.remove()
+
 
 
     return {"message": f"This is {letter}"}
