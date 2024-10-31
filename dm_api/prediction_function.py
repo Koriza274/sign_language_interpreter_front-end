@@ -13,17 +13,19 @@ from matplotlib import pyplot as plt
 
 
 def get_encoder():
-    landmark_data =np.load("landmark_data.npy")
+
     labels = np.load("labels.npy")
 
-    landmark_data = landmark_data / np.max(landmark_data)
+
 
     # Encode labels as integers and convert to categorical
     label_encoder = LabelEncoder()
     label_encoder.fit(labels)
     return label_encoder
 
-
+def get_max_landmark_data():
+    landmark_data =np.load("landmark_data.npy")
+    return np.max(landmark_data)
 
 
 def predict_image(directory):
@@ -60,7 +62,9 @@ def predict_image(directory):
             sequence.pop(0)
 
         if len(sequence) == sequence_length:
-            sequence_input = np.array(sequence).flatten()[np.newaxis, ..., np.newaxis]
+            sequence_input = np.array(sequence)
+            sequence_input = sequence_input/ np.max(get_max_landmark_data())
+            sequence_input = sequence_input.flatten()[np.newaxis, ..., np.newaxis]
             prediction = model.predict(sequence_input)
             predicted_label_index = np.argmax(prediction)
             predicted_label = label_encoder.inverse_transform([predicted_label_index])
