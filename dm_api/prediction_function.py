@@ -13,18 +13,15 @@ from matplotlib import pyplot as plt
 
 
 def get_encoder():
-
-    labels = np.load("labels.npy")
-
-
-
+    #taken from original code: need to automise it somehow
+    labels = np.load("dm_api/data&model/labels.npy")
     # Encode labels as integers and convert to categorical
     label_encoder = LabelEncoder()
     label_encoder.fit(labels)
     return label_encoder
 
 def get_max_landmark_data():
-    landmark_data =np.load("landmark_data.npy")
+    landmark_data =np.load("dm_api/data&model/landmark_data.npy")
     return np.max(landmark_data)
 
 
@@ -42,7 +39,7 @@ def predict_image(directory):
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1,min_detection_confidence=0.4)
     mp_drawing = mp.solutions.drawing_utils
-    model = load_model("/home/diana/code/Koriza274/sign_language_interpreter/asl_sign_language_model_tf_2.18.keras")
+    model = load_model("dm_api/data&model/asl_sign_language_model_tf_2.18.keras")
 
     img = cv2.imread(directory)
     img = adjust_brightness_contrast(img, 40, 1)
