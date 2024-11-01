@@ -2,9 +2,37 @@ import streamlit as st
 import cv2 as cv
 import mediapipe as mp
 import numpy as np
+from PIL import Image
+import requests
 import copy
 import os
+import io
 #from streamlit_webrtc import webrtc_streamer
+
+API_URL = "https://dmapi-564221756825.europe-west1.run.app"
+
+def get_predictions(uploaded_file):
+
+    # Prepare image data for API
+    if isinstance(uploaded_file, np.ndarray):
+        # Convert the numpy array directly to a PIL image
+        image = Image.fromarray(hand_region)
+    else:
+        # If it's a file-like object, use Image.open
+        image = Image.open(hand_region)    #image  = Image.open(uploaded_file)
+
+    image_data = io.BytesIO()
+    image.save(image_data,format = 'PNG')  # Save the image in the desired format
+    #display image to besent to model (for debugging purposes)
+    #st.image(image_data)
+    image_data.seek(0)  # Rewind the buffer
+
+    url = f"{API_URL}/upload"
+    files = {'file': image_data}
+    response = requests.post(url, files=files)
+    #st.write(response.json())
+    return response.json()['message']
+    #return None
 
 def calc_bounding_rect(image, landmarks):
 
@@ -70,7 +98,13 @@ def extract_hand(source_image):
             # Drawing part
             image = draw_bounding_rect(True, image, brect)
 
+            #delete debug_image
+            os.remove(temp_path)
+
             return image, hand_region
+
+    #delete debug_image
+    os.remove(temp_path)
 
     return None, None
 
@@ -105,13 +139,21 @@ if uploaded_file is not None:
 
 if hand_region is not None:
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.image(processed_image, caption="Original", use_column_width=True)
 
     with col2:
         st.image(hand_region, caption="Hand region")
+#        st.write(type(hand_region))
 
+    with col3:
+        predictions = get_predictions(hand_region)
+        st.write("Prediction:")
+        st.markdown(
+            f"<p style='font-size:140px; font-weight:bold;'>{predictions[-1]}</p>",
+            unsafe_allow_html=True
+            )
 else:
     st.write("No hand detected in the image.")
