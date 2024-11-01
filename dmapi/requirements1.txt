@@ -1,0 +1,8 @@
+scikit-learn
+uvicorn
+fastapi
+cv
+mediapipe
+numpy
+tensorflow==2.18.0
+python-multipart
