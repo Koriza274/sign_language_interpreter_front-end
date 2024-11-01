@@ -1,4 +1,4 @@
-import pandas as pd
+
 import os
 
 
@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import File, UploadFile, HTTPException
 
-from dm_api.prediction_function import predict_image
+from dmapi.prediction_function import predict_image
 
 
 
