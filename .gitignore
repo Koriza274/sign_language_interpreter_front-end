@@ -1,6 +1,4 @@
 raw_data/
-.env
+temp_dir
 .python-version
 .DS_Store
-requirements.txt
-.npy
