@@ -1,0 +1,6 @@
+raw_data/
+.env
+.python-version
+.DS_Store
+requirements.txt
+.npy
