@@ -7,9 +7,14 @@ import requests
 import copy
 import os
 import io
+from dotenv import load_dotenv
+from params import *
 #from streamlit_webrtc import webrtc_streamer
 
-API_URL = "https://dmapi-564221756825.europe-west1.run.app"
+
+load_dotenv()
+api_url = API_URL
+#API_URL = "https://dmapi-564221756825.europe-west1.run.app"
 
 def get_predictions(uploaded_file):
 
@@ -27,7 +32,7 @@ def get_predictions(uploaded_file):
     #st.image(image_data)
     image_data.seek(0)  # Rewind the buffer
 
-    url = f"{API_URL}/upload"
+    url = f"{api_url}/upload"
     files = {'file': image_data}
     response = requests.post(url, files=files)
     #st.write(response.json())
@@ -157,3 +162,10 @@ if hand_region is not None:
             )
 else:
     st.write("No hand detected in the image.")
+
+
+def display_url():
+    print(api_url)
+
+if __name__  == '__main__':
+    display_url()
