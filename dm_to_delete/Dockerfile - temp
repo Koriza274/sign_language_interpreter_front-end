@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir opencv-python-headless
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY API API
+COPY dm_to_delete dm_to_delete
+COPY models models
 
-
-CMD uvicorn API.api:app --host 0.0.0.0 --port $PORT
+CMD uvicorn dm_to_delete.api_file_1:app --host 0.0.0.0 --port $PORT
