@@ -12,7 +12,7 @@ app = FastAPI()
 # Root endpoint
 @app.get("/")
 def root():
-    return {'greeting': "Ready for ASL letter prediction!!"}
+    return {'greeting': "Ready for ASL letter prediction!"}
 
 # Prediction endpoint
 @app.post("/upload")
@@ -44,5 +44,5 @@ async def predict(file: UploadFile = File(...)):
                 print(f"Error deleting file: {e}")
             file.file.close()
     return {
-            "message": f"This is {str(label)}"
+            "message": f"This is {str(label)}","confidence":f"{confidence}%"
         }
