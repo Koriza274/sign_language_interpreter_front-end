@@ -8,13 +8,13 @@ import copy
 import os
 import io
 import time
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from params import *
 from streamlit_webrtc import webrtc_streamer
 from front_ASL_layout import display_image_columns
 
 
-load_dotenv()
+#load_dotenv()
 api_url = API_URL
 #API_URL = "https://dmapi-564221756825.europe-west1.run.app"
 
