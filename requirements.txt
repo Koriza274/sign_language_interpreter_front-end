@@ -11,4 +11,5 @@ pillow==10.4.0
 requests==2.32.3
 uvicorn==0.32.0
 python-multipart==0.0.16
-
+python-dotenv
+streamlit-webrtc
