@@ -10,7 +10,7 @@ import io
 import time
 from dotenv import load_dotenv
 from params import *
-#from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer
 from front_ASL_layout import display_image_columns
 
 
@@ -187,8 +187,8 @@ if hand_region is not None:
 else:
     st.write("No hand detected in the image.")
 
-#def display_url():
-    #print(api_url)
+def display_url():
+    print(api_url)
 
-#if __name__  == '__main__':
-    #display_url()
+if __name__  == '__main__':
+    display_url()
