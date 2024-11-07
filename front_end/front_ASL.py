@@ -187,8 +187,8 @@ if hand_region is not None:
 else:
     st.write("No hand detected in the image.")
 
-def display_url():
-    print(api_url)
+#def display_url():
+    #print(api_url)
 
-if __name__  == '__main__':
-    display_url()
+#if __name__  == '__main__':
+    #display_url()
