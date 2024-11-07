@@ -2,6 +2,7 @@ import streamlit as st
 import cv2 as cv
 import mediapipe as mp
 import numpy as np
+import time
 from PIL import Image
 import requests
 import copy
@@ -33,8 +34,27 @@ st.sidebar.write("""
 - TensorFlow for machine learning model development
 - Streamlit for the web interface
 """)
+LAST_CLEAR_TIME = 0  # Keep track of the last time the cache was cleared
+CACHE_CLEAR_INTERVAL = 120  # Interval in seconds (clear cache every 120 seconds)
+
+def should_clear_cache():
+    global LAST_CLEAR_TIME
+    current_time = time.time()
+    if current_time - LAST_CLEAR_TIME > CACHE_CLEAR_INTERVAL:
+        LAST_CLEAR_TIME = current_time
+        return True
+    return False
+
+
+
 
 def get_predictions_with_progress(uploaded_file):
+
+    if should_clear_cache():
+        st.cache_data.clear()
+        #st.info("Cache cleared periodically.")
+
+
     # Initialize progress bar at 0%
     progress_bar = st.progress(0)
 
