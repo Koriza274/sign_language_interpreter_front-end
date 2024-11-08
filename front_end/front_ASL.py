@@ -16,8 +16,8 @@ from front_ASL_layout import display_image_columns
 
 
 load_dotenv()
-#api_url = st.secrets["API_URL"]
-api_url = API_URL
+api_url = st.secrets["API_URL"]
+#api_url = API_URL
 
 
 st.sidebar.title("Project Information")
