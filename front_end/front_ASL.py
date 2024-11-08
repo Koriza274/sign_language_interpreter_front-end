@@ -208,6 +208,11 @@ if hand_region is not None:
 else:
     st.write("No hand detected in the image.")
 
+
+if should_clear_cache():
+        st.cache_data.clear()
+        #st.info("Cache cleared periodically.")
+
 def display_url():
     print(api_url)
 
