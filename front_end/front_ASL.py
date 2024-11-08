@@ -35,7 +35,7 @@ st.sidebar.write("""
 - Streamlit for the web interface
 """)
 LAST_CLEAR_TIME = 0  # Keep track of the last time the cache was cleared
-CACHE_CLEAR_INTERVAL = 120  # Interval in seconds (clear cache every 120 seconds)
+CACHE_CLEAR_INTERVAL = 60  # Interval in seconds (clear cache every 120 seconds)
 
 def should_clear_cache():
     global LAST_CLEAR_TIME
