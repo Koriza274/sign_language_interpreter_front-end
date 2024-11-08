@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-with open("requirements_1.txt") as f:
+with open("requirements.txt") as f:
     content = f.readlines()
 requirements = [x.strip() for x in content if "git+" not in x]
 
