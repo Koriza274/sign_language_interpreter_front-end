@@ -18,6 +18,7 @@ This project is the final project of the Data Science course by LeWagon, Batch 1
 - Web-based interface using Streamlit
 - Scalable API using FastAPI
 - Deployment ready with Docker support
+- Includes a Jupyter notebook (letter_detection_images.ipynb) that trains the model and is adaptable for further improvements
 
 ---
 
