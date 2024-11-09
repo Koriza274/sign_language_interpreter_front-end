@@ -45,10 +45,15 @@ def should_clear_cache():
         return True
     return False
 
+
+
+
 def get_predictions_with_progress(uploaded_file):
 
     if should_clear_cache():
         st.cache_data.clear()
+        #st.info("Cache cleared periodically.")
+
 
     # Initialize progress bar at 0%
     progress_bar = st.progress(0)
@@ -58,11 +63,26 @@ def get_predictions_with_progress(uploaded_file):
         # Convert the numpy array directly to a PIL image
         image = Image.fromarray(uploaded_file)
     else:
+        # If it's a file-like object, use Image.open
         image = Image.open(uploaded_file)
+
+    # Get original dimensions
+    original_width, original_height = image.size
+
+    # Calculate new dimensions while keeping the aspect ratio
+    if original_width > original_height:
+        new_width = 512
+        new_height = int((512 / original_width) * original_height)
+    else:
+        new_height = 512
+        new_width = int((512 / original_height) * original_width)
+
+    # Resize image with the new dimensions
+    image = image.resize((new_width, new_height))
 
     # Convert the image to a bytes object to send over the API
     image_data = io.BytesIO()
-    image.save(image_data, format='PNG')
+    image.save(image_data, format='PNG')  # Save the image in PNG format
     image_data.seek(0)  # Rewind the buffer to the start
 
     # Set up the API URL and prepare files for the request
@@ -76,8 +96,8 @@ def get_predictions_with_progress(uploaded_file):
     response = requests.post(url, files=files)
 
     # Simulate loading progress in increments, to show the API processing
-    for i in range(20, 100, 20):
-        time.sleep(0.1)
+    for i in range(20, 100, 20):  # Increment progress in steps of 20%
+        time.sleep(0.1)  # Short delay to simulate loading time
         progress_bar.progress(i)
 
     # Retrieve and return the prediction from the API response
@@ -86,6 +106,8 @@ def get_predictions_with_progress(uploaded_file):
 
     # Set progress to 100% once loading is complete
     progress_bar.progress(100)
+
+    # Clear the progress bar from the screen
     progress_bar.empty()
 
     return predictions, confidence
@@ -159,9 +181,6 @@ def extract_hand(source_image):
             #delete debug_image
             os.remove(temp_path)
 
-            if isinstance(hand_region, np.ndarray):
-                hand_region = Image.fromarray(hand_region)
-
             return image, hand_region
 
     #delete debug_image
@@ -198,8 +217,6 @@ if uploaded_file is not None:
     processed_image, hand_region = extract_hand(uploaded_file)
 
 if hand_region is not None:
-    max_size = 256
-    hand_region.thumbnail((max_size, max_size))
     prediction, confidence = get_predictions_with_progress(hand_region)
     display_image_columns(processed_image, hand_region, (prediction, confidence))
 else:
