@@ -196,7 +196,10 @@ if uploaded_file is not None:
 
 if hand_region is not None:
     max_size = 256
-    hand_region.thumbnail((max_size, max_size)) 
+    if isinstance(hand_region, np.ndarray):
+        hand_region = Image.fromarray(hand_region)
+    hand_region.thumbnail((max_size, max_size))
+    width, height = hand_region.size
     prediction, confidence = get_predictions_with_progress(hand_region)
     display_image_columns(processed_image, hand_region, (prediction, confidence))
 else:
