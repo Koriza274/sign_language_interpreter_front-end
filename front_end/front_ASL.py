@@ -60,10 +60,6 @@ def get_predictions_with_progress(uploaded_file):
     else:
         image = Image.open(uploaded_file)
 
-    # IMAGE RESIZING
-    max_size = 512
-    image.thumbnail((max_size, max_size))
-
     # Convert the image to a bytes object to send over the API
     image_data = io.BytesIO()
     image.save(image_data, format='PNG')
@@ -199,6 +195,8 @@ if uploaded_file is not None:
     processed_image, hand_region = extract_hand(uploaded_file)
 
 if hand_region is not None:
+    max_size = 256
+    hand_region.thumbnail((max_size, max_size)) 
     prediction, confidence = get_predictions_with_progress(hand_region)
     display_image_columns(processed_image, hand_region, (prediction, confidence))
 else:
