@@ -3,7 +3,7 @@ mediapipe==0.10.10
 numpy==1.26.4
 #tensorflow==none
 #scikit-learn==1.5.2
-protobuf==3.20.3
+#protobuf==3.20.3
 #fastapi==0.115.4
 streamlit==1.39.0
 pillow==10.4.0
