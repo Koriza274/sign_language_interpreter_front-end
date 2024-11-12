@@ -1,19 +1,13 @@
 import streamlit as st
-#import cv2 as cv
-#import mediapipe as mp
 import numpy as np
 import time
 from PIL import Image
 import requests
-#import copy
-#import os
 import io
 import time
 from io import BytesIO
 import base64
 from dotenv import load_dotenv
-#from params import *
-#from streamlit_webrtc import webrtc_streamer
 from front_ASL_layout import display_image_columns
 
 
@@ -37,7 +31,7 @@ st.sidebar.write("""
 - Streamlit for the web interface
 """)
 LAST_CLEAR_TIME = 0  # Keep track of the last time the cache was cleared
-CACHE_CLEAR_INTERVAL = 60  # Interval in seconds (clear cache every 120 seconds)
+CACHE_CLEAR_INTERVAL = 120  # Interval in seconds (clear cache every 120 seconds)
 
 def should_clear_cache():
     global LAST_CLEAR_TIME
@@ -106,8 +100,10 @@ def get_predictions_with_progress(uploaded_file):
         progress_bar.progress(i)
 
     # Retrieve and return the prediction from the API response
+
+
     prediction = response.json()['message']
-    confidence = response.json()['confidence']
+    confidence = response.json()['confidence'][:5]
     processed_image = base64_image(response.json()["image"])
     hand_region = base64_image(response.json()["hand"])
     # Set progress to 100% once loading is complete
@@ -118,16 +114,10 @@ def get_predictions_with_progress(uploaded_file):
 
     return prediction, confidence, processed_image, hand_region
 
+
 st.title("Show hands!")
 
 st.write('Take a picture with the computer camera, or upload a file.')
-
-# Initialize MediaPipe hands model
-#mp_hands = mp.solutions.hands
-#hands = mp_hands.Hands(static_image_mode=True,
-                       #max_num_hands=2,
-                       #min_detection_confidence=0.5,
-                       #min_tracking_confidence=0.5)
 
 
 camera_image = st.camera_input("Take a picture")
@@ -137,7 +127,10 @@ hand_region = None
 # Display and save the captured image
 if camera_image is not None:
     # Display the captured image
-    prediction, confidence, processed_image, hand_region = get_predictions_with_progress(camera_image)
+    try:
+        prediction, confidence, processed_image, hand_region = get_predictions_with_progress(camera_image)
+    except Exception:
+        st.write('Try again')
 
 
 # File uploader to upload an image
@@ -145,7 +138,13 @@ uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
 
-    prediction, confidence, processed_image, hand_region = get_predictions_with_progress(uploaded_file)
+    try:
+        prediction, confidence, processed_image, hand_region = get_predictions_with_progress(uploaded_file)
+    except Exception:
+        st.write('Try uploading another image')
+
+
+
 
 if hand_region is not None:
 
