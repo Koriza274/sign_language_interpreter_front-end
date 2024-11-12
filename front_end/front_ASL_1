@@ -18,8 +18,8 @@ from front_ASL_layout import display_image_columns
 
 
 load_dotenv()
-#api_url = st.secrets["API_URL"]
-api_url = "https://my-api-app-3-564221756825.us-central1.run.app"
+api_url = st.secrets["API_URL"]
+
 
 
 st.sidebar.title("Project Information")
