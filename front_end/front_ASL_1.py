@@ -123,7 +123,7 @@ st.write('Take a picture with the computer camera, or upload a file.')
 #camera_image = st.camera_input("Take a picture")
 colImg, colCamera = st.columns([2, 10])
 
-IMAGE_FOLDER = "./asl"  # Replace with the path to your folder
+IMAGE_FOLDER = "front_end/asl"  # Replace with the path to your folder
 
 # Load image paths
 image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith(('.png', '.jpg', '.jpeg'))]
