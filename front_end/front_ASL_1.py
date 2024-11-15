@@ -4,17 +4,17 @@ import time
 from PIL import Image
 import requests
 import io
+import os
+import random
 import time
 from io import BytesIO
 import base64
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from front_ASL_layout import display_image_columns
 
 
-load_dotenv()
+#load_dotenv()
 api_url = st.secrets["API_URL"]
-
-
 
 st.sidebar.title("Project Information")
 st.sidebar.write("""
@@ -120,7 +120,32 @@ st.title("Show hands!")
 st.write('Take a picture with the computer camera, or upload a file.')
 
 
-camera_image = st.camera_input("Take a picture")
+#camera_image = st.camera_input("Take a picture")
+colImg, colCamera = st.columns([2, 10])
+
+IMAGE_FOLDER = "./asl"  # Replace with the path to your folder
+
+# Load image paths
+image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith(('.png', '.jpg', '.jpeg'))]
+
+if "random_images" not in st.session_state:
+    st.session_state.random_images = random.sample(image_files, 3)
+
+with colImg:
+
+    # Display the current set of random images
+    for img_path in st.session_state.random_images:
+        img = Image.open(img_path)
+#        st.image(img, use_column_width=True)
+        st.image(img, width=80)
+
+    if st.button("Refresh"):
+        # Generate a new set of random images and store them in session state
+        st.session_state.random_images = random.sample(image_files, 3)
+
+
+with colCamera:
+    camera_image = st.camera_input("Take a picture")
 
 hand_region = None
 
