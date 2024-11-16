@@ -172,9 +172,9 @@ if page == "Home Page":
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file:
-        st.info("Processing...")
+        
         try:
-            #st.info("Processing...")
+            st.info("Processing...")
             prediction, confidence, processed_image, hand_region = get_predictions_with_progress(uploaded_file)
         except Exception:
             st.write("Try uploading another image.")
