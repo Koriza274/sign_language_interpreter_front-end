@@ -177,20 +177,6 @@ if hand_region is not None:
 else:
     st.write("No hand detected in the image.")
 
-# New Features
-st.sidebar.title("Interactive Features")
-with st.sidebar:
-    show_references = st.checkbox("Show Letter Signs")
-
-if show_references:
-    with st.expander("Letter Signs", expanded=True):
-        st.markdown("### Reference Images for Letter Signs")
-        cols = st.columns(4)  # Adjust the number of columns for grid layout
-        for i, img_path in enumerate(image_files):
-            with cols[i % 4]:  # Arrange images in a grid
-                img = Image.open(img_path)
-                st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
-
 
 
 def display_url():
