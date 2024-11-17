@@ -11,8 +11,7 @@ from io import BytesIO
 from front_ASL_layout import display_image_columns, adjust_brightness_contrast
 
 # API URL from secrets
-#api_url = st.secrets["API_URL"]
-api_url = "https://my-api-app-3-564221756825.us-central1.run.app"
+api_url = st.secrets["API_URL"]
 
 # Sidebar Navigation
 page = st.sidebar.radio("Navigate", ["Home Page", "Game On!"])
