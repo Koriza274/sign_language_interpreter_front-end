@@ -8,10 +8,11 @@ import os
 import random
 import base64
 from io import BytesIO
-from front_ASL_layout import display_image_columns
+from front_ASL_layout import display_image_columns, adjust_brightness_contrast
 
 # API URL from secrets
-api_url = st.secrets["API_URL"]
+#api_url = st.secrets["API_URL"]
+api_url = "https://my-api-app-3-564221756825.us-central1.run.app"
 
 # Sidebar Navigation
 page = st.sidebar.radio("Navigate", ["Home Page", "Game On!"])
@@ -33,18 +34,18 @@ st.sidebar.write("""
 """)
 
 # Display reference images for letter signs
-IMAGE_FOLDER = "front_end/asl"  
+IMAGE_FOLDER = "front_end/asl"
 image_files = sorted(
     [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
-    key=lambda x: os.path.basename(x).lower()  
+    key=lambda x: os.path.basename(x).lower()
 )
 
 with st.sidebar:
     st.markdown("## Reference Images for Letter Signs")
     with st.expander("Click to open"):
-        cols = st.columns(4)  
+        cols = st.columns(4)
         for i, img_path in enumerate(image_files):
-            with cols[i % 4]:  
+            with cols[i % 4]:
                 img = Image.open(img_path)
                 st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
 
@@ -155,35 +156,50 @@ if page == "Home Page":
         # Refresh random images
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
-
+    bright= st.slider("Select brightness",10,60,step=10)
+    contrast = st.slider("Select constrast",0.5,1.5,step = 0.25)
     with camera_col:
         # Camera input
         camera_image = st.camera_input("Take a picture")
 
+
+
     hand_region = None
     if camera_image:
         try:
+            img_c = adjust_brightness_contrast(camera_image,brightness = bright,contrast =contrast)
             st.info("Processing...")
-            prediction, confidence, processed_image, hand_region = get_predictions_with_progress(camera_image)
+            prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
         except Exception:
-            st.write("Try again.")
+            st.write("Try again. Here is what we see:")
+            st.image(img_c)
 
     # File uploader for image input
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
+
+
+
     if uploaded_file:
-        
+
+
         try:
+            img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
             st.info("Processing...")
-            prediction, confidence, processed_image, hand_region = get_predictions_with_progress(uploaded_file)
+            prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
         except Exception:
-            st.write("Try uploading another image.")
+            st.write("Try again. Here is what we see:")
+            st.image(img_u)
+
+
 
     # Display processed results
     if hand_region:
         display_image_columns(processed_image, hand_region, (prediction, confidence))
     else:
         st.write("No hand detected in the image.")
+
+
 
 # Game On! functionality
 elif page == "Game On!":
@@ -196,14 +212,14 @@ elif page == "Game On!":
         st.session_state.current_letter_index = 0
     if "letter_scores" not in st.session_state:
         # To store scores for each letter
-        st.session_state.letter_scores = []  
+        st.session_state.letter_scores = []
     if "game_files" not in st.session_state:
         st.session_state.game_files = [f for f in os.listdir("front_end/game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
     if "selected_game_image" not in st.session_state:
         st.session_state.selected_game_image = random.choice(st.session_state.game_files)
     if "camera_input_key" not in st.session_state:
         # Initialize key for camera input
-        st.session_state.camera_input_key = 0  
+        st.session_state.camera_input_key = 0
 
     # Refresh word and image logic
     def refresh_game_image():
@@ -320,4 +336,3 @@ def display_url():
 # Run the script
 if __name__ == "__main__":
     display_url()
-
