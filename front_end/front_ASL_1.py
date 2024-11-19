@@ -161,37 +161,48 @@ if page == "Home Page":
         # Camera input
         camera_image = st.camera_input("Take a picture")
 
+    # THIS IS THE WAY IT WAS BEFORE BO CHANGED IT #####################################################################################
+    # hand_region = None
+    # if camera_image:
+    #     try:
+    #         img_c = adjust_brightness_contrast(camera_image,brightness = bright,contrast =contrast)
+    #         st.info("Processing...")
+    #         prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
+    #     except Exception:
+    #         st.write("Try again. Here is what we see:")
+    #         st.image(img_c)
 
+    # # File uploader for image input
+    # uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-    hand_region = None
-    if camera_image:
-        try:
-            img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
-            
-            with st.spinner('Processing...'):
-                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
-        except Exception:
-            st.write("Try again. Here is what we see:")
-            st.image(img_c)
+    # if uploaded_file:
 
-    # File uploader for image input
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    #     try:
+    #         img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
+    #         st.info("Processing...")
+    #         prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
+    #     except Exception:
+    #         st.write("Try again. Here is what we see:")
+    #         st.image(img_u)
 
+        hand_region = None
+        if camera_image:
+            try:
+                img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
 
+                with st.spinner('Processing...'):
+                    prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
+            except Exception:
+                st.write("Try again. Here is what we see:")
+                st.image(img_c)
 
-
-    if uploaded_file:
-
-
-        try:
-            img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
-            with st.spinner('Processing...'):
-                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
-        except Exception:
-            st.write("Try again. Here is what we see:")
-            st.image(img_u)
-
-
+            try:
+                img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
+                with st.spinner('Processing...'):
+                    prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
+            except Exception:
+                st.write("Try again. Here is what we see:")
+                st.image(img_u)
 
     # Display processed results
     if hand_region:
