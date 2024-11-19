@@ -33,7 +33,7 @@ st.sidebar.write("""
 """)
 
 # Display reference images for letter signs
-IMAGE_FOLDER = "front_end/asl"
+IMAGE_FOLDER = "asl"
 image_files = sorted(
     [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
     key=lambda x: os.path.basename(x).lower()
@@ -89,9 +89,8 @@ def get_predictions_with_progress(uploaded_file):
 
     image = image.resize((new_width, new_height))
 
-    # Convert the image to a bytes object to send to the API
     image_data = io.BytesIO()
-    image.save(image_data, format='PNG')  # Save the image in PNG format
+    image.save(image_data, format='PNG')
     image_data.seek(0)
 
     # Send the image to the API
@@ -103,19 +102,17 @@ def get_predictions_with_progress(uploaded_file):
 
     response = requests.post(url, files=files)
 
-    # Simulate progress bar for API processing
-    for i in range(20, 100, 20):  # Increment progress in steps of 20%
-        time.sleep(0.1)  # Simulate delay
+    for i in range(20, 100, 20):
+        time.sleep(0.1)
         progress_bar.progress(i)
 
     # Process the API response
     prediction = response.json()['message']
-    confidence = float(response.json()['confidence'][:5])  # Ensure confidence is a float
+    confidence = float(response.json()['confidence'][:5])
 
     processed_image = base64_image(response.json()["image"])
     hand_region = base64_image(response.json()["hand"])
 
-    # Update progress bar to 100%
     progress_bar.progress(100)
     progress_bar.empty()
 
@@ -140,7 +137,7 @@ if page == "Home Page":
     # Camera and image input layout
     image_col, camera_col = st.columns([2, 10])
 
-    IMAGE_FOLDER = "front_end/asl"
+    IMAGE_FOLDER = "asl"
     image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')]
 
     if "random_images" not in st.session_state:
@@ -155,61 +152,39 @@ if page == "Home Page":
         # Refresh random images
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
-    bright= st.slider("Select brightness",10,60,step=10,value = 30)
-    contrast = st.slider("Select constrast",0.5,1.5,step = 0.25,value = 1.0)
+    bright = st.slider("Select brightness", 10, 60, step=10, value=30)
+    contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
     with camera_col:
         # Camera input
         camera_image = st.camera_input("Take a picture")
 
-    # THIS IS THE WAY IT WAS BEFORE BO CHANGED IT #####################################################################################
-    # hand_region = None
-    # if camera_image:
-    #     try:
-    #         img_c = adjust_brightness_contrast(camera_image,brightness = bright,contrast =contrast)
-    #         st.info("Processing...")
-    #         prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
-    #     except Exception:
-    #         st.write("Try again. Here is what we see:")
-    #         st.image(img_c)
+    hand_region = None
+    if camera_image:
+        try:
+            img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
+            with st.spinner("Processing..."):
+                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
+        except Exception:
+            st.write("Try again. Here is what we see:")
+            st.image(img_c)
 
-    # # File uploader for image input
-    # uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    # File uploader for image input
+    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-    # if uploaded_file:
-
-    #     try:
-    #         img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
-    #         st.info("Processing...")
-    #         prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
-    #     except Exception:
-    #         st.write("Try again. Here is what we see:")
-    #         st.image(img_u)
-
-        hand_region = None
-        if camera_image:
-            try:
-                img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
-
-                with st.spinner('Processing...'):
-                    prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
-            except Exception:
-                st.write("Try again. Here is what we see:")
-                st.image(img_c)
-
-            try:
-                img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
-                with st.spinner('Processing...'):
-                    prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
-            except Exception:
-                st.write("Try again. Here is what we see:")
-                st.image(img_u)
+    if uploaded_file:
+        try:
+            img_u = adjust_brightness_contrast(uploaded_file, brightness=bright, contrast=contrast)
+            with st.spinner("Processing..."):
+                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
+        except Exception:
+            st.write("Try again. Here is what we see:")
+            st.image(img_u)
 
     # Display processed results
     if hand_region:
         display_image_columns(processed_image, hand_region, (prediction, confidence))
     else:
         st.write("No hand detected in the image.")
-
 
 
 # Game On! functionality
