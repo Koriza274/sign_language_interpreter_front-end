@@ -33,7 +33,7 @@ st.sidebar.write("""
 """)
 
 # Display reference images for letter signs
-IMAGE_FOLDER = "asl"
+IMAGE_FOLDER = "front_end/asl"
 image_files = sorted(
     [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
     key=lambda x: os.path.basename(x).lower()
@@ -50,7 +50,7 @@ with st.sidebar:
 
 # Cache clearing logic
 LAST_CLEAR_TIME = 0
-CACHE_CLEAR_INTERVAL = 120  # Interval in seconds (clear cache every 120 seconds)
+CACHE_CLEAR_INTERVAL = 240  # Interval in seconds (clear cache every 240 seconds)
 
 def should_clear_cache():
     global LAST_CLEAR_TIME
@@ -137,7 +137,7 @@ if page == "Home Page":
     # Camera and image input layout
     image_col, camera_col = st.columns([2, 10])
 
-    IMAGE_FOLDER = "asl"
+    IMAGE_FOLDER = "front_end/asl"
     image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')]
 
     if "random_images" not in st.session_state:
