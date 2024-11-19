@@ -166,9 +166,10 @@ if page == "Home Page":
     hand_region = None
     if camera_image:
         try:
-            img_c = adjust_brightness_contrast(camera_image,brightness = bright,contrast =contrast)
-            st.info("Processing...")
-            prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
+            img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
+            
+            with st.spinner('Processing...'):
+                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
         except Exception:
             st.write("Try again. Here is what we see:")
             st.image(img_c)
@@ -184,8 +185,8 @@ if page == "Home Page":
 
         try:
             img_u = adjust_brightness_contrast(uploaded_file,brightness = bright,contrast =contrast)
-            st.info("Processing...")
-            prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
+            with st.spinner('Processing...'):
+                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
         except Exception:
             st.write("Try again. Here is what we see:")
             st.image(img_u)
