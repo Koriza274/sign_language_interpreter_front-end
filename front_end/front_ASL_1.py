@@ -200,7 +200,7 @@ elif page == "Game On!":
         # To store scores for each letter
         st.session_state.letter_scores = []
     if "game_files" not in st.session_state:
-        st.session_state.game_files = [f for f in os.listdir("front_end/game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
+        st.session_state.game_files = [f for f in os.listdir("game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
     if "selected_game_image" not in st.session_state:
         st.session_state.selected_game_image = random.choice(st.session_state.game_files)
     if "camera_input_key" not in st.session_state:
@@ -209,18 +209,29 @@ elif page == "Game On!":
 
     # Refresh word and image logic
     def refresh_game_image():
-        st.session_state.selected_game_image = random.choice(st.session_state.game_files)
+        previous_image = st.session_state.selected_game_image
+        new_image = random.choice(st.session_state.game_files)
+        
+        # Optional: Stelle sicher, dass ein neues Bild ausgewählt wird
+        while new_image == previous_image and len(st.session_state.game_files) > 1:
+            new_image = random.choice(st.session_state.game_files)
+        
+        st.session_state.selected_game_image = new_image
         st.session_state.current_word = os.path.splitext(st.session_state.selected_game_image)[0].upper()
         st.session_state.current_letter_index = 0
-        st.session_state.letter_scores = [None] * len(st.session_state.current_word)  # Reset scores for each letter
+        st.session_state.letter_scores = [None] * len(st.session_state.current_word)
 
     # Initialize current word and image
     if not st.session_state.current_word:
         refresh_game_image()
 
-    game_image_path = os.path.join("front_end/game_images", st.session_state.selected_game_image)
+    game_image_path = os.path.join("game_images", st.session_state.selected_game_image)
     game_word = st.session_state.current_word
     current_letter = game_word[st.session_state.current_letter_index]
+
+    # Debugging-Ausgabe
+    st.write(f"Angezeigtes Bild: {game_image_path}")
+    st.write(f"Spielwort: {game_word}")
 
     # Layout for the Game On! page
     col_left, col_right = st.columns([2, 3])
