@@ -200,7 +200,7 @@ elif page == "Game On!":
         # To store scores for each letter
         st.session_state.letter_scores = []
     if "game_files" not in st.session_state:
-        st.session_state.game_files = [f for f in os.listdir("game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
+        st.session_state.game_files = [f for f in os.listdir("front_end/game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
     if "selected_game_image" not in st.session_state:
         st.session_state.selected_game_image = random.choice(st.session_state.game_files)
     if "camera_input_key" not in st.session_state:
