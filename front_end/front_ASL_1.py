@@ -225,7 +225,7 @@ elif page == "Game On!":
     if not st.session_state.current_word:
         refresh_game_image()
 
-    game_image_path = os.path.join("game_images", st.session_state.selected_game_image)
+    game_image_path = os.path.join("front_end/game_images", st.session_state.selected_game_image)
     game_word = st.session_state.current_word
     current_letter = game_word[st.session_state.current_letter_index]
 
