@@ -1,2 +1,2 @@
 import os
-API_URL = os.environ.get("API_URL")
+API_URL_video = os.environ.get("API_URL_video")
