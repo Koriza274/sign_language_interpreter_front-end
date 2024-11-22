@@ -194,13 +194,13 @@ if page == "Home Page":
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
 
-    col1, col2 = st.columns(2)
+    # col1, col2 = st.columns(2)
 
-    with col1:
-        bright = st.slider("Select brightness", 10, 60, step=10, value=30)
+    # with col1:
+    #     bright = st.slider("Select brightness", 10, 60, step=10, value=30)
 
-    with col2:
-        contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
+    # with col2:
+    #     contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
 
     with camera_col:
         # Camera input
