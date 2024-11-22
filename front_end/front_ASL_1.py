@@ -322,6 +322,7 @@ elif page == "Game On!":
 
             st.session_state.random_images = random.sample(st.session_state.game_images, 3)
             refresh_game_image()
+            st.session_state.random_images = None
 
         else:
 
