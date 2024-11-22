@@ -199,9 +199,10 @@ if page == "Home Page":
         for img_path in st.session_state.random_images:
             img = Image.open(img_path)
             st.image(img, width=80)
-            st.session_state.pop("random_images")
+            
 
         if st.button("Refresh"):
+            st.session_state.pop("random_images")
             st.session_state.random_images = random.sample(image_files, 3)
             
 
