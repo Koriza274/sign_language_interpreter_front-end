@@ -353,6 +353,7 @@ elif page == "Game On!":
                         
                     except Exception: 
                         st.write("No hand detected in the image. Try again")
+                        return
                     prediction, confidence, _, _ = results
                     predicted_letter = prediction.strip().split()[-1].upper()
                     # Display the predicted letter
