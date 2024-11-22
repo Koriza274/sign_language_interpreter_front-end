@@ -204,9 +204,9 @@ if page == "Home Page":
             st.image(img, width=80)
             
 
-            if st.button("Refresh"):
+        if st.button("Refresh"):
             
-                st.session_state.random_images = random.sample(image_files, 3)
+            st.session_state.random_images = random.sample(image_files, 3)
             
 
     st.write("If your image is too dark or bright and is not performing well, you can adjust it here using these sliders.")
