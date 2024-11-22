@@ -322,9 +322,8 @@ elif page == "Game On!":
 
             st.session_state.random_images = random.sample(st.session_state.game_images, 3)
             refresh_game_image()
-            keys = list(st.session_state.keys())
-            for key in keys:
-                st.write(key)
+            st.session_state.pop("random_images")
+            
 
         else:
 
