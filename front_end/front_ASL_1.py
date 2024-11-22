@@ -14,7 +14,7 @@ from video_section import display_video_section
 # API URL from secrets
 api_url = st.secrets["API_URL"]
 # Sidebar Navigation
-page = st.sidebar.radio("Navigate", ["ABC", "Game On!"])
+page = st.sidebar.radio("Navigate", ["Home Page", "Game On!"])
 
 # Sidebar with project information
 st.sidebar.title("Project Information")
