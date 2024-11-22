@@ -439,13 +439,13 @@ elif page == "Game On!":
                 display_video_section(VIDEO_FOLDER, st.session_state.current_word)
             current_word = st.session_state.current_word
             ##clean up session_state for challenge
-            """st.session_state.current_word = None
-            st.session_state.current_letter_index = 0
-            st.session_state.letter_scores = []
-            st.session_state.selected_game_image = random.choice(st.session_state.game_files)
-            predicted_letter_placeholder.empty()
-            st.session_state.user_gives_up = False
-            st.session_state.challenge_completed = False"""
+            #st.session_state.current_word = None
+            #st.session_state.current_letter_index = 0
+            #st.session_state.letter_scores = []
+            #st.session_state.selected_game_image = random.choice(st.session_state.game_files)
+            #predicted_letter_placeholder.empty()
+            #st.session_state.user_gives_up = False
+            #st.session_state.challenge_completed = False
 
 
 # Function to display the API URL (for debugging)
