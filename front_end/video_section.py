@@ -6,7 +6,7 @@ import base64
 import time
 import tempfile
 from PIL import Image, ImageSequence
-api_url = "https://word-interpreter-app-373962339093.europe-west1.run.app/predict_word"
+api_url = st.secrets["API_URL_video"]
 def display_video_section(video_path, word):
     ##placeholder to display the HIPPO video
 #    word = "HIPPO"
