@@ -173,18 +173,8 @@ def calculate_score(predicted_letter, required_letter, confidence):
         return f"{score}/10", "green", score
     
 
-st.markdown("### Adjust Image Settings")
-st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    bright = st.slider("Brightness", 10, 60, step=10, value=30)
-
-with col2:
-    contrast = st.slider("Contrast", 0.5, 1.5, step=0.25, value=1.0)
-
-# Home Page functionality
+bright = 30
+contrast = 1.0
 
 if page == "Home Page":
     st.title("Show hands and learn how to sign!")
@@ -250,6 +240,18 @@ if page == "Home Page":
         display_image_columns(processed_image, hand_region, (prediction, confidence))
     else:
         st.write("No hand detected in the image.")
+
+    
+    st.markdown("### Adjust Image Settings")
+    st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        bright = st.slider("Brightness", 10, 60, step=10, value=bright)
+
+    with col2:
+        contrast = st.slider("Contrast", 0.5, 1.5, step=0.25, value=contrast)
 
 
 # Game On! functionality
