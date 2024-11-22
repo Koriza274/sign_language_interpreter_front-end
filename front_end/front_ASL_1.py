@@ -351,45 +351,46 @@ elif page == "Game On!":
                     
                         
                         
-                    except Exception: 
+                    
+                        prediction, confidence, _, _ = results
+                        predicted_letter = prediction.strip().split()[-1].upper()
+                        # Display the predicted letter
+                        predicted_letter_placeholder.markdown(
+                            f"<div style='font-size:20px; font-weight:bold;'>Predicted Letter: <span style='color:blue;'>{predicted_letter}</span></div>",
+                            unsafe_allow_html=True
+                        )
+    
+                        # Check the current letter and calculate score
+        #                if predicted_letter == current_letter:
+                        if predicted_letter == st.session_state.current_word[st.session_state.current_letter_index]:
+        #                    score_text, color, score = calculate_score(predicted_letter, current_letter, confidence)
+                            score_text, color, score = calculate_score(predicted_letter, st.session_state.current_word[st.session_state.current_letter_index], confidence)
+                            st.session_state.letter_scores[st.session_state.current_letter_index] = score
+    
+                            st.markdown(
+        #                        f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {current_letter}: {score_text}</div>",
+                                f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {st.session_state.current_word[st.session_state.current_letter_index]}: {score_text}</div>",
+                                unsafe_allow_html=True,
+                            )
+    
+                            st.session_state.current_letter_index +=1
+    
+        #                    if st.session_state.current_letter_index == len(game_word):
+                            if st.session_state.current_letter_index == len(st.session_state.current_word):
+                                st.write("You have completed the word!")
+                                st.session_state.challenge_completed = True
+                    
+
+
+                        else:
+                            st.markdown(
+        #                        f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {current_letter}</div>",
+                                f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {st.session_state.current_word[st.session_state.current_letter_index]}</div>",
+                                unsafe_allow_html=True,
+                            )
+                            st.session_state.letter_scores[st.session_state.current_letter_index] = 0
+                    except Exception:
                         st.write("No hand detected in the image. Try again")
-                        break
-                    prediction, confidence, _, _ = results
-                    predicted_letter = prediction.strip().split()[-1].upper()
-                    # Display the predicted letter
-                    predicted_letter_placeholder.markdown(
-                        f"<div style='font-size:20px; font-weight:bold;'>Predicted Letter: <span style='color:blue;'>{predicted_letter}</span></div>",
-                        unsafe_allow_html=True
-                    )
-
-                    # Check the current letter and calculate score
-    #                if predicted_letter == current_letter:
-                    if predicted_letter == st.session_state.current_word[st.session_state.current_letter_index]:
-    #                    score_text, color, score = calculate_score(predicted_letter, current_letter, confidence)
-                        score_text, color, score = calculate_score(predicted_letter, st.session_state.current_word[st.session_state.current_letter_index], confidence)
-                        st.session_state.letter_scores[st.session_state.current_letter_index] = score
-
-                        st.markdown(
-    #                        f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {current_letter}: {score_text}</div>",
-                            f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {st.session_state.current_word[st.session_state.current_letter_index]}: {score_text}</div>",
-                            unsafe_allow_html=True,
-                        )
-
-                        st.session_state.current_letter_index +=1
-
-    #                    if st.session_state.current_letter_index == len(game_word):
-                        if st.session_state.current_letter_index == len(st.session_state.current_word):
-                            st.write("You have completed the word!")
-                            st.session_state.challenge_completed = True
-
-
-                    else:
-                        st.markdown(
-    #                        f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {current_letter}</div>",
-                            f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {st.session_state.current_word[st.session_state.current_letter_index]}</div>",
-                            unsafe_allow_html=True,
-                        )
-                        st.session_state.letter_scores[st.session_state.current_letter_index] = 0
 
                 except Exception as e:
                     st.error(f"Error processing input: {e}")
