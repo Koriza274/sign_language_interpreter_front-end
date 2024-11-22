@@ -187,10 +187,13 @@ if page == "Home Page":
         st.session_state.random_images = random.sample(image_files, 3)
 
     with image_col:
-        # Display random image
         for img_path in st.session_state.random_images:
             img = Image.open(img_path)
             st.image(img, width=80)
+
+        if st.button("Refresh Images"):
+            st.session_state.random_images = random.sample(image_files, 3)
+            st.experimental_rerun()
 
     bright = st.slider("Select brightness", 10, 60, step=10, value=30)
     contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
