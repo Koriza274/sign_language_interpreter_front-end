@@ -218,16 +218,16 @@ if page == "Home Page":
             st.image(img_c)
 
     # File uploader for image input
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    # uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-    if uploaded_file:
-        try:
-            img_u = adjust_brightness_contrast(uploaded_file, brightness=bright, contrast=contrast)
-            with st.spinner("Processing..."):
-                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
-        except Exception:
-            st.write("Try again. Here is what we see:")
-            st.image(img_u)
+    # if uploaded_file:
+    #     try:
+    #         img_u = adjust_brightness_contrast(uploaded_file, brightness=bright, contrast=contrast)
+    #         with st.spinner("Processing..."):
+    #             prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
+    #     except Exception:
+    #         st.write("Try again. Here is what we see:")
+    #         st.image(img_u)
 
     # Display processed results
     if hand_region:
