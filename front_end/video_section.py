@@ -6,7 +6,7 @@ import base64
 import time
 import tempfile
 from PIL import Image, ImageSequence
-api_url = st.secrets["API_URL_video"]
+api_url_video = st.secrets["API_URL_video"]
 def display_video_section(video_path, word):
     ##placeholder to display the HIPPO video
 #    word = "HIPPO"
@@ -71,7 +71,7 @@ def display_video_section(video_path, word):
         # Send all frames to the API at once
         payload = {"frames": frames_base64}
         try:
-            response = requests.post(api_url, json=payload)
+            response = requests.post(api_url_video, json=payload)
             if response.status_code == 200:
                 result = response.json()
                 prediction_text = f"Prediction: {result['prediction']}, Confidence: {result['confidence']:.2f}%"
