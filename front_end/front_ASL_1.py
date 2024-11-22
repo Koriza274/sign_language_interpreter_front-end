@@ -211,7 +211,7 @@ if page == "Home Page":
             st.session_state.button_clicked = True
             st.session_state.random_images = random.sample(image_files, 3)
         if st.session_state.button_clicked:
-            pass
+            st.session_state.random_images = random.sample(image_files, 3)
             
 
     st.write("If your image is too dark or bright and is not performing well, you can adjust it here using these sliders.")
