@@ -437,7 +437,7 @@ elif page == "Game On!":
         if st.session_state.challenge_completed:
             with col_right:
                 display_video_section(VIDEO_FOLDER, st.session_state.current_word)
-            current_word = st.session_state.current_word
+            #current_word = st.session_state.current_word
             
             #st.session_state.cleanup_ready = True
 
