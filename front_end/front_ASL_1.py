@@ -445,6 +445,7 @@ elif page == "Game On!":
             st.markdown(f"You are giving up on {st.session_state.current_word}!")
 
         if st.session_state.challenge_completed:
+            reset_camera('Game On!')
             with col_right:
                 display_video_section(VIDEO_FOLDER, st.session_state.current_word)
             #current_word = st.session_state.current_word
