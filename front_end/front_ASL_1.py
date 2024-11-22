@@ -214,7 +214,7 @@ if page == "Home Page":
 
     with camera_col:
         # Camera input
-        camera_image = st.camera_input("", key=f"camera_1_{st.session_state.page_key['Home Page']}")
+        camera_image = st.camera_input("", key=f"camera_1_{st.session_state.page_key['Home Page']}", label_visibility = "collapsed")
 
     hand_region = None
     if camera_image:
