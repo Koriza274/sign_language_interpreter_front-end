@@ -81,6 +81,7 @@ def display_video_section(video_path, word):
                     gif_bytes = base64.b64decode(gif_base64)
                     gif_placeholder.image(gif_bytes)#, format="GIF")
                 st.success(prediction_text)
+                return 'success'
             else:
                 st.error(f"Error: Received status code {response.status_code}")
         except Exception as e:
