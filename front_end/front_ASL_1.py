@@ -39,7 +39,7 @@ IMAGE_FOLDER = os.path.join(os.getcwd(), 'asl')
 GAME_IMAGES = os.path.join(os.getcwd(),  'game_images')
 VIDEO_FOLDER = os.path.join(os.getcwd(), 'videos')
 
- if "image_files" not in st.session_state:
+if "image_files" not in st.session_state:
     # Display reference images for letter signs
     image_files = sorted(
         [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
