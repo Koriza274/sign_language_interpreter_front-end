@@ -43,18 +43,13 @@ IMAGE_FOLDER = "front_end/asl"
 GAME_IMAGES = "front_end/game_images"
 VIDEO_FOLDER = "front_end/videos"
 
-image_files = sorted(
-    [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
-    key=lambda x: os.path.basename(x).lower()
-)
-
-# if "image_files" not in st.session_state:
+ if "image_files" not in st.session_state:
     # Display reference images for letter signs
-  #  image_files = sorted(
-   #     [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
-    #    key=lambda x: os.path.basename(x).lower()
-    #)
-    #st.session_state.image_files = image_files
+    image_files = sorted(
+        [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
+        key=lambda x: os.path.basename(x).lower()
+    )
+    st.session_state.image_files = image_files
 
 if "game_images" not in st.session_state:
     # Retreive game images
