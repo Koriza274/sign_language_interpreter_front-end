@@ -192,24 +192,27 @@ if page == "Home Page":
 #    IMAGE_FOLDER = "asl"
     image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')]
 
-    if "random_images" not in st.session_state:
-        st.session_state.random_images = random.sample(image_files, 3)
+    image_col, camera_col = st.columns([2, 10])
 
+    # Linke Spalte mit Bildern, Refresh-Button und Dropdown-Menü
     with image_col:
+        # Zeige die drei zufälligen Bilder
         for img_path in st.session_state.random_images:
             img = Image.open(img_path)
             st.image(img, width=80)
 
-    if st.button("Refresh"):
-        st.session_state.random_images = random.sample(image_files, 3)
+        # Refresh-Button
+        if st.button("Refresh"):
+            st.session_state.random_images = random.sample(image_files, 3)
 
-    st.markdown("## Reference Images for Letter Signs")
-    with st.expander("Click to open"):
-        cols = st.columns(4)
-        for i, img_path in enumerate(st.session_state.image_files):
-            with cols[i % 4]:
-                img = Image.open(img_path)
-                st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
+        # Dropdown-Menü für Referenzbilder
+        st.markdown("## Reference Images for Letter Signs")
+        with st.expander("Click to open"):
+            cols = st.columns(4)
+            for i, img_path in enumerate(st.session_state.image_files):
+                with cols[i % 4]:
+                    img = Image.open(img_path)
+                    st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
 
     st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
     col1, col2 = st.columns(2)
