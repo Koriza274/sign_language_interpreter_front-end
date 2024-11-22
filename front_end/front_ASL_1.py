@@ -385,7 +385,7 @@ elif page == "Game On!":
     # Left side: Display image and word
     with col_left:
 #        st.image(game_image_path, caption=f"Sign the word: {game_word}", use_container_width=True)
-        st.image(os.path.join(GAME_IMAGES, st.session_state.selected_game_image), use_container_width=True)
+        st.image(os.path.join(GAME_IMAGES, st.session_state.selected_game_image), use_column_width=True)
 
 
 
