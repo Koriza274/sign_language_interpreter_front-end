@@ -173,9 +173,9 @@ def calculate_score(predicted_letter, required_letter, confidence):
         return f"{score}/10", "green", score
 
 # Home Page functionality
-if page == "Home Page":
-    st.title("Show hands!")
-    st.write("Take a picture with the computer camera, or upload a file.")
+if page == "ABC":
+    st.title("Show your hands and learn to sign!")
+    st.write("Take a picture with your computer camera or upload a file, and try to mimic the signs shown on the left.")
 
     # Camera and image input layout
     image_col, camera_col = st.columns([2, 10])
