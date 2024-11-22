@@ -244,6 +244,8 @@ if page == "Home Page":
     else:
         st.write("No hand detected in the image.")
 
+
+
 # Game On! functionality
 elif page == "Game On!":
     st.title("Game On!")
@@ -256,17 +258,19 @@ elif page == "Game On!":
     if "current_letter_index" not in st.session_state:
         st.session_state.current_letter_index = 0
     if "letter_scores" not in st.session_state:
+        # To store scores for each letter
         st.session_state.letter_scores = []
+#    if "game_files" not in st.session_state:
+#        st.session_state.game_files = [f for f in os.listdir("game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
     if "selected_game_image" not in st.session_state:
         st.session_state.selected_game_image = random.choice(st.session_state.game_files)
-    if "learn_word_mode" not in st.session_state:
-        st.session_state.learn_word_mode = False  # New mode to show only the video section
 
     # Refresh word and image logic
     def refresh_game_image():
         previous_image = st.session_state.selected_game_image
         new_image = random.choice(st.session_state.game_files)
 
+        # Optional: Stelle sicher, dass ein neues Bild ausgewählt wird
         while new_image == previous_image and len(st.session_state.game_files) > 1:
             new_image = random.choice(st.session_state.game_files)
 
@@ -277,66 +281,56 @@ elif page == "Game On!":
         st.session_state.user_gives_up = False
         st.session_state.challenge_completed = False
 
+        if 'predicted_letter_placeholder' in st.session_state:
+            st.session_state.predicted_letter_placeholder = st.empty()
+
+
     # Initialize current word and image
     if not st.session_state.current_word:
         refresh_game_image()
 
-    # Check if learn word mode is active
-    if st.session_state.learn_word_mode:
-        # Display the video learning section
-        display_video_section(VIDEO_FOLDER, st.session_state.current_word)
-        if st.button("Back to Game"):
-            st.session_state.learn_word_mode = False
-    else:
-        # Main game logic
-        col_left, col_right = st.columns(2)
+    # Layout for the Game On! page
+#    col_left, col_right = st.columns([2, 3])
+    col_left, col_right = st.columns(2)
 
-        # Left column: Display the word's image and status
-        with col_left:
-            st.image(os.path.join(GAME_IMAGES, st.session_state.selected_game_image), use_column_width=True)
+    # Right side: Camera input and buttons
+    with col_right:
+        #st.markdown("### ⭐ Your turn! ⭐")
 
-            if st.session_state.current_letter_index == len(st.session_state.current_word):
-                current_letter = "Done!"
-            else:
-                current_letter = st.session_state.current_word[st.session_state.current_letter_index]
-            st.markdown(f"### Current Letter: {current_letter}")
-            st.markdown("### Letters score:")
-            for idx, letter in enumerate(st.session_state.current_word):
-                if idx < st.session_state.current_letter_index:
-                    score = st.session_state.letter_scores[idx]
-                    if score is None or score <= 4:
-                        st.markdown(f"❌ {letter} - And your score is {score}/10")
-                    elif score <= 8:
-                        st.markdown(f"⚠️ {letter} - And your score is {score}/10")
-                    else:
-                        st.markdown(f"✅ {letter} - And your score is {score}/10")
-                elif idx == st.session_state.current_letter_index:
-                    st.markdown(f"👉 {letter}")
-                else:
-                    st.markdown(f"⬜ {letter}")
+        lbl = "With your computer camera, take pictures of you signing each letter for the word challenge. Retry as many times as you want, clearing and taking pictures until you succeed, or move on to the next letter!"
+        camera_input = st.camera_input(label=lbl, key=f"camera_2_{st.session_state.page_key['Game On!']}")
+        predicted_letter_placeholder = st.empty()  # Placeholder for predicted letter
+        if 'predicted_letter_placeholder' not in st.session_state:
+            st.session_state.predicted_letter_placeholder = predicted_letter_placeholder
 
-            # Show the button to learn the word when the challenge is completed
-            if st.session_state.challenge_completed:
-                if st.button(f"Do you want to learn how to sign the word {st.session_state.current_word}?"):
-                    st.session_state.learn_word_mode = True
+        st.markdown("""
+                    <style>
+                    div.stButton > button {width: 100%;
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
 
-        # Right column: User interaction with the game
-        with col_right:
-            lbl = "With your computer camera, take pictures of you signing each letter for the word challenge. Retry as many times as you want, clearing and taking pictures until you succeed, or move on to the next letter!"
-            camera_input = st.camera_input(label=lbl, key=f"camera_2_{st.session_state.page_key['Game On!']}")
-            predicted_letter_placeholder = st.empty()
+        col_move_on, col_change_animal = st.columns(2)
+        with col_move_on:
+            move_on = col_move_on.button("Skip letter !")
 
-            col_move_on, col_change_animal = st.columns(2)
-            with col_move_on:
-                move_on = col_move_on.button("Skip letter!")
-            with col_change_animal:
-                change_animal = col_change_animal.button("Change animal")
+        with col_change_animal:
+            change_animal = col_change_animal.button("Change animal")
 
-            if change_animal:
-                refresh_game_image()
+        # Refresh random images
+        if change_animal:
 
+            st.session_state.random_images = random.sample(st.session_state.game_images, 3)
+            refresh_game_image()
+
+        else:
+
+            #only predict when the user is taking a picture, not when they're asking to move on
+    #        if camera_input:
             if camera_input and not move_on:
+
                 try:
+
                     st.session_state.camera_input = camera_input
                     st.query_params.clear()
 
@@ -352,22 +346,29 @@ elif page == "Game On!":
                     )
 
                     # Check the current letter and calculate score
+    #                if predicted_letter == current_letter:
                     if predicted_letter == st.session_state.current_word[st.session_state.current_letter_index]:
+    #                    score_text, color, score = calculate_score(predicted_letter, current_letter, confidence)
                         score_text, color, score = calculate_score(predicted_letter, st.session_state.current_word[st.session_state.current_letter_index], confidence)
                         st.session_state.letter_scores[st.session_state.current_letter_index] = score
 
                         st.markdown(
+    #                        f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {current_letter}: {score_text}</div>",
                             f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {st.session_state.current_word[st.session_state.current_letter_index]}: {score_text}</div>",
                             unsafe_allow_html=True,
                         )
 
-                        st.session_state.current_letter_index += 1
+                        st.session_state.current_letter_index +=1
 
+    #                    if st.session_state.current_letter_index == len(game_word):
                         if st.session_state.current_letter_index == len(st.session_state.current_word):
                             st.write("You have completed the word!")
                             st.session_state.challenge_completed = True
+
+
                     else:
                         st.markdown(
+    #                        f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {current_letter}</div>",
                             f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {st.session_state.current_word[st.session_state.current_letter_index]}</div>",
                             unsafe_allow_html=True,
                         )
@@ -376,18 +377,75 @@ elif page == "Game On!":
                 except Exception as e:
                     st.error(f"Error processing input: {e}")
 
-            # Skip letter logic
+            # Button logic for Try Again and Move On
+    #        if try_again or move_on:
             if move_on:
                 reset_camera('Game On!')
+    #            camera_input = None  # Clear the camera input placeholder
+
+            if move_on:
+                # Save the last score and move to the next letter
                 st.session_state.letter_scores[st.session_state.current_letter_index] = (
                     st.session_state.letter_scores[st.session_state.current_letter_index] or 0
                 )
+
                 st.session_state.current_letter_index += 1
+
+    #            if st.session_state.current_letter_index < len(game_word) - 1:
                 if st.session_state.current_letter_index <= len(st.session_state.current_word) - 1:
+    #                st.session_state.current_letter_index += 1
                     predicted_letter_placeholder.empty()
                 else:
                     st.session_state.user_gives_up = True
                     st.session_state.challenge_completed = True
+
+    # Left side: Display image and word
+    with col_left:
+#        st.image(game_image_path, caption=f"Sign the word: {game_word}", use_container_width=True)
+        st.image(os.path.join(GAME_IMAGES, st.session_state.selected_game_image), use_column_width=True)
+
+
+
+        if st.session_state.current_letter_index == len(st.session_state.current_word):
+            current_letter = "Done!"
+        else:
+            current_letter = st.session_state.current_word[st.session_state.current_letter_index]
+        st.markdown(f"### Current Letter: {current_letter}")
+        st.markdown("### Letters score:")
+#        for idx, letter in enumerate(game_word):
+        for idx, letter in enumerate(st.session_state.current_word):
+            if idx < st.session_state.current_letter_index:
+                # Completed letters: Display their icons based on score
+                score = st.session_state.letter_scores[idx]
+                if score is None or score <= 4:
+                    st.markdown(f"❌ {letter} - And your score is {score}/10")
+                elif score <= 8:
+                    st.markdown(f"⚠️ {letter} - And your score is {score}/10")
+                else:
+                    st.markdown(f"✅ {letter} - And your score is {score}/10")
+            elif idx == st.session_state.current_letter_index:
+                # Highlight the current letter
+                st.markdown(f"👉 {letter}")
+            else:
+                # Upcoming letters remain blank
+                st.markdown(f"⬜ {letter}")
+
+        if  st.session_state.user_gives_up:
+#            st.markdown(f"You are giving up on {game_word}!")
+            st.markdown(f"You are giving up on {st.session_state.current_word}!")
+
+        if st.session_state.challenge_completed:
+            with col_right:
+                display_video_section(VIDEO_FOLDER, st.session_state.current_word)
+            current_word = st.session_state.current_word
+            ##clean up session_state for challenge
+            st.session_state.current_word = None
+            st.session_state.current_letter_index = 0
+            st.session_state.letter_scores = []
+            st.session_state.selected_game_image = random.choice(st.session_state.game_files)
+            predicted_letter_placeholder.empty()
+            st.session_state.user_gives_up = False
+            st.session_state.challenge_completed = False
 
 
 # Function to display the API URL (for debugging)
