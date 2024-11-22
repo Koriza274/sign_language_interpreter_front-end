@@ -181,6 +181,10 @@ def calculate_score(predicted_letter, required_letter, confidence):
     else:
         return f"{score}/10", "green", score
 
+def refresh_images():
+    st.session_state.random_images = random.sample(image_files, 3)
+
+
 # Home Page functionality
 if page == "Home Page":
     st.title("Show hands and learn how to sign!")
@@ -202,8 +206,9 @@ if page == "Home Page":
             
 
         if st.button("Refresh"):
-            st.session_state.pop("random_images")
-            st.session_state.random_images = random.sample(image_files, 3)
+            #st.session_state.pop("random_images")
+            refresh_images()
+            #st.session_state.random_images = random.sample(image_files, 3)
             
 
     st.write("If your image is too dark or bright and is not performing well, you can adjust it here using these sliders.")
