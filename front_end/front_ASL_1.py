@@ -349,10 +349,11 @@ elif page == "Game On!":
                     try:
                         results = get_predictions_with_progress(st.session_state.camera_input)
                     
-                        prediction, confidence, _, _ = results
+                        
                         
                     except Exception: 
                         st.write("No hand detected in the image. Try again")
+                    prediction, confidence, _, _ = results
                     predicted_letter = prediction.strip().split()[-1].upper()
                     # Display the predicted letter
                     predicted_letter_placeholder.markdown(
