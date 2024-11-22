@@ -21,12 +21,7 @@ st.sidebar.title("Learn American Sign Language")
 st.sidebar.write("""
 **Goal**: This project is designed to help users learn the American Sign Language (ASL) alphabet by recognizing and mimicking gestures for each letter. It also features an interactive game mode where users can practice spelling words using ASL.
 
-**Background**: This project was developed as part of the LeWagon #1705 course by the following contributors:
-- [Jean-Michel](https://github.com/JMLejeune-evolvi)
-- [Diana](https://github.com/Koriza274/)
-- [Robert](https://github.com/ropath)
-- [Gabriel](https://github.com/gabrielrehder)
-- [Boris](https://github.com/just1984)
+**Background**: This project was developed as part of the LeWagon #1705 course by the following contributors: [Jean-Michel](https://github.com/JMLejeune-evolvi), [Diana](https://github.com/Koriza274/), [Robert](https://github.com/ropath), [Gabriel](https://github.com/gabrielrehder) & [Boris](https://github.com/just1984).
 
 **Technologies Used**:
 - **Python**: For scripting and data processing
