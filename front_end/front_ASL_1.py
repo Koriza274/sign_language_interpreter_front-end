@@ -438,8 +438,8 @@ elif page == "Game On!":
             with col_right:
                 display_video_section(VIDEO_FOLDER, st.session_state.current_word)
             current_word = st.session_state.current_word
-            if display_video_section(VIDEO_FOLDER, st.session_state.current_word) == 'success':
-                st.session_state.cleanup_ready = True
+            
+            st.session_state.cleanup_ready = True
 
         if st.session_state.cleanup_ready:
             time.sleep(2)
