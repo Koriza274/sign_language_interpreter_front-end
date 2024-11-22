@@ -172,9 +172,16 @@ def calculate_score(predicted_letter, required_letter, confidence):
     else:
         return f"{score}/10", "green", score
     
+    st.markdown("### Adjust Image Settings")
+    st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
 
-bright = 30 
-contrast = 1.0 
+    col1, col2 = st.columns(2)
+
+    with col1:
+        bright = st.slider("Brightness", 10, 60, step=10, value=30)
+
+    with col2:
+        contrast = st.slider("Contrast", 0.5, 1.5, step=0.25, value=1.0)
 
 # Home Page functionality
 if page == "Home Page":
@@ -184,6 +191,7 @@ if page == "Home Page":
     # Camera and image input layout
     image_col, camera_col = st.columns([2, 10])
 
+#    IMAGE_FOLDER = "asl"
     image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')]
 
     if "random_images" not in st.session_state:
@@ -197,40 +205,50 @@ if page == "Home Page":
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
 
+    # col1, col2 = st.columns(2)
+
+    # with col1:
+    #     bright = st.slider("Select brightness", 10, 60, step=10, value=30)
+
+    # with col2:
+    #     contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
+
     with camera_col:
         # Camera input
         camera_image = st.camera_input("Take a picture", key=f"camera_1_{st.session_state.page_key['Home Page']}")
 
-    processed_image = None
     hand_region = None
+    if camera_image:
+        try:
+            img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
+            with st.spinner("Processing..."):
+                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
+        except Exception as e:
+            st.write("An error occurred while processing the image:")
+            st.error(e)
+            if 'img_c' in locals():  # Prüfen, ob img_c definiert ist
+                st.image(img_c)
 
     # File uploader for image input
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file:
-        img_u = Image.open(uploaded_file)
-        processed_image = adjust_brightness_contrast(img_u, brightness=bright, contrast=contrast)
-        st.image(processed_image, caption="Processed Image", use_column_width=True)
+        try:
+            img_u = adjust_brightness_contrast(uploaded_file, brightness=bright, contrast=contrast)
+            with st.spinner("Processing..."):
+                prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
+        except Exception as e:
+            st.write("An error occurred while processing the uploaded image:")
+            st.error(e)
+            if 'img_u' in locals():  # Prüfen, ob img_u definiert ist
+                st.image(img_u)
 
-    if camera_image:
-        img_c = Image.open(camera_image)
-        processed_image = adjust_brightness_contrast(img_c, brightness=bright, contrast=contrast)
-        st.image(processed_image, caption="Processed Camera Image", use_column_width=True)
+    # Display processed results
+    if hand_region:
+        display_image_columns(processed_image, hand_region, (prediction, confidence))
+    else:
+        st.write("No hand detected in the image.")
 
-st.markdown("### Adjust Image Settings")
-st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    bright = st.slider("Brightness", 10, 60, step=10, value=bright)
-
-with col2:
-    contrast = st.slider("Contrast", 0.5, 1.5, step=0.25, value=contrast)
-
-if processed_image:
-    processed_image = adjust_brightness_contrast(processed_image, brightness=bright, contrast=contrast)
-    st.image(processed_image, caption="Adjusted Image", use_column_width=True)
 
 # Game On! functionality
 elif page == "Game On!":
