@@ -194,6 +194,7 @@ if page == "Home Page":
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
 
+    st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
     col1, col2 = st.columns(2)
 
     with col1:
