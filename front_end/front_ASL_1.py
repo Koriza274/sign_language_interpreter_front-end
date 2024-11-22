@@ -204,7 +204,7 @@ if page == "Home Page":
 
     with camera_col:
         # Camera input
-        camera_image = st.camera_input(None, key=f"camera_1_{st.session_state.page_key['Home Page']}")
+        camera_image = st.camera_input("Take a picture", key=f"camera_1_{st.session_state.page_key['Home Page']}")
 
     hand_region = None
     if camera_image:
