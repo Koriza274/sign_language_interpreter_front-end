@@ -171,17 +171,6 @@ def calculate_score(predicted_letter, required_letter, confidence):
         return f"{score}/10", "orange", score
     else:
         return f"{score}/10", "green", score
-    
-    st.markdown("### Adjust Image Settings")
-    st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        bright = st.slider("Brightness", 10, 60, step=10, value=30)
-
-    with col2:
-        contrast = st.slider("Contrast", 0.5, 1.5, step=0.25, value=1.0)
 
 # Home Page functionality
 if page == "Home Page":
@@ -205,13 +194,13 @@ if page == "Home Page":
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
 
-    # col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-    # with col1:
-    #     bright = st.slider("Select brightness", 10, 60, step=10, value=30)
+    with col1:
+        bright = st.slider("Select brightness", 10, 60, step=10, value=30)
 
-    # with col2:
-    #     contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
+    with col2:
+        contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
 
     with camera_col:
         # Camera input
@@ -223,11 +212,9 @@ if page == "Home Page":
             img_c = adjust_brightness_contrast(camera_image, brightness=bright, contrast=contrast)
             with st.spinner("Processing..."):
                 prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_c)
-        except Exception as e:
-            st.write("An error occurred while processing the image:")
-            st.error(e)
-            if 'img_c' in locals():  # Prüfen, ob img_c definiert ist
-                st.image(img_c)
+        except Exception:
+            st.write("Try again. Here is what we see:")
+            st.image(img_c)
 
     # File uploader for image input
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
@@ -237,17 +224,16 @@ if page == "Home Page":
             img_u = adjust_brightness_contrast(uploaded_file, brightness=bright, contrast=contrast)
             with st.spinner("Processing..."):
                 prediction, confidence, processed_image, hand_region = get_predictions_with_progress(img_u)
-        except Exception as e:
-            st.write("An error occurred while processing the uploaded image:")
-            st.error(e)
-            if 'img_u' in locals():  # Prüfen, ob img_u definiert ist
-                st.image(img_u)
+        except Exception:
+            st.write("Try again. Here is what we see:")
+            st.image(img_u)
 
     # Display processed results
     if hand_region:
         display_image_columns(processed_image, hand_region, (prediction, confidence))
     else:
         st.write("No hand detected in the image.")
+
 
 
 # Game On! functionality
