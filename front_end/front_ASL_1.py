@@ -2,10 +2,10 @@ import streamlit as st
 
 st.markdown("""
     <style>
-    .main {
+    div[data-testid="stAppViewContainer"] {
         max-width: 70%;
-        margin: 0 auto;
-        text-align: left;
+        margin-left: 0;
+        margin-right: auto;
     }
     </style>
     """, unsafe_allow_html=True)
