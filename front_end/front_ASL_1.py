@@ -118,8 +118,8 @@ def base64_image(base64_str):
     return img
 
 def get_predictions_with_progress(uploaded_file):
-    if should_clear_cache():
-        st.cache_data.clear()
+    #if should_clear_cache():
+        #st.cache_data.clear()
 
     # Initialize progress bar
     progress_bar = st.progress(0)
