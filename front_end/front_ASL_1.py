@@ -1,4 +1,15 @@
 import streamlit as st
+
+st.markdown("""
+    <style>
+    div[data-testid="stAppViewContainer"] {
+        max-width: 90%;
+        margin-left: 0;
+        margin-right: auto;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 import numpy as np
 import time
 from PIL import Image
@@ -189,8 +200,16 @@ if page == "Home Page":
             img = Image.open(img_path)
             st.image(img, width=80)
 
-        if st.button("Refresh"):
-            st.session_state.random_images = random.sample(image_files, 3)
+    if st.button("Refresh"):
+        st.session_state.random_images = random.sample(image_files, 3)
+
+    st.markdown("## Reference Images for Letter Signs")
+    with st.expander("Click to open"):
+        cols = st.columns(4)
+        for i, img_path in enumerate(st.session_state.image_files):
+            with cols[i % 4]:
+                img = Image.open(img_path)
+                st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
 
     st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
     col1, col2 = st.columns(2)
