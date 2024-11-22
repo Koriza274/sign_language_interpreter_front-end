@@ -217,7 +217,7 @@ if page == "Home Page":
             st.write("Try again. Here is what we see:")
             st.image(img_c)
 
-    # File uploader for image input
+    # THE FOLLOWING DISPLAYS THE UPLOAD AN IMAGE SECTION ###########################################################
     # uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
     # if uploaded_file:
