@@ -11,6 +11,16 @@ from io import BytesIO
 from front_ASL_layout import display_image_columns, adjust_brightness_contrast
 from video_section import display_video_section
 
+st.markdown("""
+    <style>
+    .main {
+        max-width: 70%;
+        margin: 0 auto;
+        text-align: left;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # API URL from secrets
 api_url = st.secrets["API_URL"]
 # Sidebar Navigation
