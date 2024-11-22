@@ -191,7 +191,7 @@ if page == "Home Page":
             img = Image.open(img_path)
             st.image(img, width=80)
 
-        if st.button("Refresh Bilder"):
+        if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
 
     bright = st.slider("Select brightness", 10, 60, step=10, value=30)
