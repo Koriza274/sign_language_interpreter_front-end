@@ -87,7 +87,7 @@ with st.sidebar:
         for i, img_path in enumerate(st.session_state.image_files):
             with cols[i % 4]:
                 img = Image.open(img_path)
-                st.image(img, use_container_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
+                st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
 
 
 
