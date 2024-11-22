@@ -3,7 +3,7 @@ import streamlit as st
 st.markdown("""
     <style>
     div[data-testid="stAppViewContainer"] {
-        max-width: 70%;
+        max-width: 95%;
         margin-left: 0;
         margin-right: auto;
     }
