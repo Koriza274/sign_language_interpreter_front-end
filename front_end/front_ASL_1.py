@@ -9,10 +9,10 @@ import random
 import base64
 from io import BytesIO
 from front_ASL_layout import display_image_columns, adjust_brightness_contrast
+from video_section import display_video_section
 
 # API URL from secrets
 api_url = st.secrets["API_URL"]
-
 # Sidebar Navigation
 page = st.sidebar.radio("Navigate", ["Home Page", "Game On!"])
 
@@ -32,21 +32,64 @@ st.sidebar.write("""
 - Streamlit for the web interface
 """)
 
-# Display reference images for letter signs
-IMAGE_FOLDER = "front_end/asl"
-image_files = sorted(
-    [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
-    key=lambda x: os.path.basename(x).lower()
-)
+#IMAGE_FOLDER = os.path.join(os.getcwd(), 'asl')
+#GAME_IMAGES = os.path.join(os.getcwd(), 'game_images')
+
+IMAGE_FOLDER = os.path.join(os.getcwd(), 'asl')
+GAME_IMAGES = os.path.join(os.getcwd(),  'game_images')
+VIDEO_FOLDER = os.path.join(os.getcwd(), 'videos')
+
+if "image_files" not in st.session_state:
+    # Display reference images for letter signs
+    image_files = sorted(
+        [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')],
+        key=lambda x: os.path.basename(x).lower()
+    )
+    st.session_state.image_files = image_files
+
+if "game_images" not in st.session_state:
+    # Retreive game images
+    st.session_state.game_images = st.session_state.game_files = [f for f in os.listdir(GAME_IMAGES) if f.endswith(('.png', '.jpg', '.jpeg'))]
+
+#Initialize camera session_state variables
+if "camera_input" not in st.session_state:
+    st.session_state.camera_input = None  # To store the image
+if "camera_input_key" not in st.session_state:
+    # Initialize key for camera input
+    st.session_state.camera_input_key = 0
+if "clear_requested" not in st.session_state:
+    st.session_state.clear_requested = False
+if "camera_cleared" not in st.session_state:
+    st.session_state.camera_cleared = False  # Flag to manage camera reset
+if "java_clear_script" not in st.session_state:
+    st.session_state.java_clear_script = False
+# Initialize session state for page-specific keys
+if "page_key" not in st.session_state:
+    st.session_state.page_key = {"Home Page": 0, "Game On!": 0}  # Separate keys for pages
+if "user_gives_up" not in st.session_state:
+    st.session_state.user_gives_up = False
+if "challenge_completed" not in st.session_state:
+    st.session_state.challenge_completed = False
+
+def reset_camera(page_name):
+    st.session_state.page_key[page_name] += 1  # Increment key for the current page
+    st.session_state[f"{page_name}_camera_input"] = None  # Clear the captured image
+
+
+def clear_camera_picture():
+    st.session_state.camera_input_key += 1  # Increment key to reset component
+    st.session_state.camera_input = None  # Clear stored image
 
 with st.sidebar:
     st.markdown("## Reference Images for Letter Signs")
     with st.expander("Click to open"):
         cols = st.columns(4)
-        for i, img_path in enumerate(image_files):
+        for i, img_path in enumerate(st.session_state.image_files):
             with cols[i % 4]:
                 img = Image.open(img_path)
-                st.image(img, use_column_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
+                st.image(img, use_container_width=True, caption=os.path.basename(img_path).split('.')[0].capitalize())
+
+
 
 # Cache clearing logic
 LAST_CLEAR_TIME = 0
@@ -137,7 +180,7 @@ if page == "Home Page":
     # Camera and image input layout
     image_col, camera_col = st.columns([2, 10])
 
-    IMAGE_FOLDER = "front_end/asl"
+#    IMAGE_FOLDER = "asl"
     image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')]
 
     if "random_images" not in st.session_state:
@@ -149,14 +192,12 @@ if page == "Home Page":
             img = Image.open(img_path)
             st.image(img, width=80)
 
-        # Refresh random images
-        if st.button("Refresh"):
-            st.session_state.random_images = random.sample(image_files, 3)
     bright = st.slider("Select brightness", 10, 60, step=10, value=30)
     contrast = st.slider("Select contrast", 0.5, 1.5, step=0.25, value=1.0)
+
     with camera_col:
         # Camera input
-        camera_image = st.camera_input("Take a picture")
+        camera_image = st.camera_input("Take a picture", key=f"camera_1_{st.session_state.page_key['Home Page']}")
 
     hand_region = None
     if camera_image:
@@ -187,9 +228,12 @@ if page == "Home Page":
         st.write("No hand detected in the image.")
 
 
+
 # Game On! functionality
 elif page == "Game On!":
     st.title("Game On!")
+
+    reset_camera("Home Page")
 
     # Initialize session state variables
     if "current_word" not in st.session_state:
@@ -199,54 +243,160 @@ elif page == "Game On!":
     if "letter_scores" not in st.session_state:
         # To store scores for each letter
         st.session_state.letter_scores = []
-    if "game_files" not in st.session_state:
-        st.session_state.game_files = [f for f in os.listdir("game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
+#    if "game_files" not in st.session_state:
+#        st.session_state.game_files = [f for f in os.listdir("game_images") if f.endswith(('.png', '.jpg', '.jpeg'))]
     if "selected_game_image" not in st.session_state:
         st.session_state.selected_game_image = random.choice(st.session_state.game_files)
-    if "camera_input_key" not in st.session_state:
-        # Initialize key for camera input
-        st.session_state.camera_input_key = 0
 
     # Refresh word and image logic
     def refresh_game_image():
         previous_image = st.session_state.selected_game_image
         new_image = random.choice(st.session_state.game_files)
-        
+
         # Optional: Stelle sicher, dass ein neues Bild ausgewählt wird
         while new_image == previous_image and len(st.session_state.game_files) > 1:
             new_image = random.choice(st.session_state.game_files)
-        
+
         st.session_state.selected_game_image = new_image
         st.session_state.current_word = os.path.splitext(st.session_state.selected_game_image)[0].upper()
         st.session_state.current_letter_index = 0
         st.session_state.letter_scores = [None] * len(st.session_state.current_word)
+        st.session_state.user_gives_up = False
+        st.session_state.challenge_completed = False
+
+        if 'predicted_letter_placeholder' in st.session_state:
+            st.session_state.predicted_letter_placeholder = st.empty()
+
 
     # Initialize current word and image
     if not st.session_state.current_word:
         refresh_game_image()
 
-    game_image_path = os.path.join("game_images", st.session_state.selected_game_image)
-    game_word = st.session_state.current_word
-    current_letter = game_word[st.session_state.current_letter_index]
-
-    # Debugging-Ausgabe
-    st.write(f"Angezeigtes Bild: {game_image_path}")
-    st.write(f"Spielwort: {game_word}")
-
     # Layout for the Game On! page
-    col_left, col_right = st.columns([2, 3])
+#    col_left, col_right = st.columns([2, 3])
+    col_left, col_right = st.columns(2)
 
-    # Top-right refresh button
+    # Right side: Camera input and buttons
     with col_right:
-        if st.button("Refresh Image"):
+        st.markdown("### ⭐ Your turn! ⭐")
+
+        lbl = "With your computer camera, take pictures of you signing each letter for the word challenge. Retry as many times as you want, clearing and taking pictures until you succeed, or move on to the next letter!"
+        camera_input = st.camera_input(label=lbl, key=f"camera_2_{st.session_state.page_key['Game On!']}")
+        predicted_letter_placeholder = st.empty()  # Placeholder for predicted letter
+        if 'predicted_letter_placeholder' not in st.session_state:
+            st.session_state.predicted_letter_placeholder = predicted_letter_placeholder
+
+        st.markdown("""
+                    <style>
+                    div.stButton > button {width: 100%;
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
+
+        col_move_on, col_change_animal = st.columns(2)
+        with col_move_on:
+            move_on = col_move_on.button("Skip letter !")
+
+        with col_change_animal:
+            change_animal = col_change_animal.button("Change animal")
+
+        # Refresh random images
+        if change_animal:
+
+            st.session_state.random_images = random.sample(st.session_state.game_images, 3)
             refresh_game_image()
+
+        else:
+
+            #only predict when the user is taking a picture, not when they're asking to move on
+    #        if camera_input:
+            if camera_input and not move_on:
+
+                try:
+
+                    st.session_state.camera_input = camera_input
+                    st.query_params.clear()
+
+                    # Process the camera input and get the prediction
+                    results = get_predictions_with_progress(st.session_state.camera_input)
+                    prediction, confidence, _, _ = results
+                    predicted_letter = prediction.strip().split()[-1].upper()
+
+                    # Display the predicted letter
+                    predicted_letter_placeholder.markdown(
+                        f"<div style='font-size:20px; font-weight:bold;'>Predicted Letter: <span style='color:blue;'>{predicted_letter}</span></div>",
+                        unsafe_allow_html=True
+                    )
+
+                    # Check the current letter and calculate score
+    #                if predicted_letter == current_letter:
+                    if predicted_letter == st.session_state.current_word[st.session_state.current_letter_index]:
+    #                    score_text, color, score = calculate_score(predicted_letter, current_letter, confidence)
+                        score_text, color, score = calculate_score(predicted_letter, st.session_state.current_word[st.session_state.current_letter_index], confidence)
+                        st.session_state.letter_scores[st.session_state.current_letter_index] = score
+
+                        st.markdown(
+    #                        f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {current_letter}: {score_text}</div>",
+                            f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {st.session_state.current_word[st.session_state.current_letter_index]}: {score_text}</div>",
+                            unsafe_allow_html=True,
+                        )
+
+                        st.session_state.current_letter_index +=1
+
+    #                    if st.session_state.current_letter_index == len(game_word):
+                        if st.session_state.current_letter_index == len(st.session_state.current_word):
+                            st.write("You have completed the word!")
+                            st.session_state.challenge_completed = True
+
+
+                    else:
+                        st.markdown(
+    #                        f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {current_letter}</div>",
+                            f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {st.session_state.current_word[st.session_state.current_letter_index]}</div>",
+                            unsafe_allow_html=True,
+                        )
+                        st.session_state.letter_scores[st.session_state.current_letter_index] = 0
+
+                except Exception as e:
+                    st.error(f"Error processing input: {e}")
+
+            # Button logic for Try Again and Move On
+    #        if try_again or move_on:
+            if move_on:
+                reset_camera('Game On!')
+    #            camera_input = None  # Clear the camera input placeholder
+
+            if move_on:
+                # Save the last score and move to the next letter
+                st.session_state.letter_scores[st.session_state.current_letter_index] = (
+                    st.session_state.letter_scores[st.session_state.current_letter_index] or 0
+                )
+
+                st.session_state.current_letter_index += 1
+
+    #            if st.session_state.current_letter_index < len(game_word) - 1:
+                if st.session_state.current_letter_index <= len(st.session_state.current_word) - 1:
+    #                st.session_state.current_letter_index += 1
+                    predicted_letter_placeholder.empty()
+                else:
+                    st.session_state.user_gives_up = True
+                    st.session_state.challenge_completed = True
 
     # Left side: Display image and word
     with col_left:
-        st.image(game_image_path, caption=f"Sign the word: {game_word}", use_column_width=True)
+#        st.image(game_image_path, caption=f"Sign the word: {game_word}", use_container_width=True)
+        st.image(os.path.join(GAME_IMAGES, st.session_state.selected_game_image), use_container_width=True)
+
+
+
+        if st.session_state.current_letter_index == len(st.session_state.current_word):
+            current_letter = "Done!"
+        else:
+            current_letter = st.session_state.current_word[st.session_state.current_letter_index]
         st.markdown(f"### Current Letter: {current_letter}")
-        st.markdown("### Letters Progress:")
-        for idx, letter in enumerate(game_word):
+        st.markdown("### Letters score:")
+#        for idx, letter in enumerate(game_word):
+        for idx, letter in enumerate(st.session_state.current_word):
             if idx < st.session_state.current_letter_index:
                 # Completed letters: Display their icons based on score
                 score = st.session_state.letter_scores[idx]
@@ -263,67 +413,22 @@ elif page == "Game On!":
                 # Upcoming letters remain blank
                 st.markdown(f"⬜ {letter}")
 
-    # Right side: Camera input and buttons
-    with col_right:
-        st.markdown("### Sign Input:")
-        camera_input = st.camera_input("Take a picture", key=st.session_state.camera_input_key)
-        predicted_letter_placeholder = st.empty()  # Placeholder for predicted letter
+        if  st.session_state.user_gives_up:
+#            st.markdown(f"You are giving up on {game_word}!")
+            st.markdown(f"You are giving up on {st.session_state.current_word}!")
 
-        # Buttons: Try Again and Move On
-        col_try_again, col_move_on = st.columns(2)
-        try_again = col_try_again.button("Try Again")
-        move_on = col_move_on.button("Move On")
-
-        if camera_input:
-            try:
-                # Process the camera input and get the prediction
-                results = get_predictions_with_progress(camera_input)
-                prediction, confidence, _, _ = results
-                predicted_letter = prediction.strip().split()[-1].upper()
-
-                # Display the predicted letter
-                predicted_letter_placeholder.markdown(
-                    f"<div style='font-size:20px; font-weight:bold;'>Predicted Letter: <span style='color:blue;'>{predicted_letter}</span></div>",
-                    unsafe_allow_html=True
-                )
-
-                # Check the current letter and calculate score
-                if predicted_letter == current_letter:
-                    score_text, color, score = calculate_score(predicted_letter, current_letter, confidence)
-                    st.session_state.letter_scores[st.session_state.current_letter_index] = score
-
-                    st.markdown(
-                        f"<div style='color:{color}; font-size:18px;'>Prediction Correct! {current_letter}: {score_text}</div>",
-                        unsafe_allow_html=True,
-                    )
-                else:
-                    st.markdown(
-                        f"<div style='color:red; font-size:18px;'>Wrong Letter! Expected: {current_letter}</div>",
-                        unsafe_allow_html=True,
-                    )
-                    st.session_state.letter_scores[st.session_state.current_letter_index] = 0
-
-            except Exception as e:
-                st.error(f"Error processing input: {e}")
-
-        # Button logic for Try Again and Move On
-        if try_again or move_on:
-            # Clear the camera input by incrementing the camera_input_key
-            st.session_state.camera_input_key += 1
-            camera_input = None  # Clear the camera input placeholder
-
-        if move_on:
-            # Save the last score and move to the next letter
-            st.session_state.letter_scores[st.session_state.current_letter_index] = (
-                st.session_state.letter_scores[st.session_state.current_letter_index] or 0
-            )
-
-            if st.session_state.current_letter_index < len(game_word) - 1:
-                st.session_state.current_letter_index += 1
-                predicted_letter_placeholder.empty()
-            else:
-                st.write("You have completed the word!")
-                refresh_game_image()
+        if st.session_state.challenge_completed:
+            with col_right:
+                display_video_section(VIDEO_FOLDER, st.session_state.current_word)
+            current_word = st.session_state.current_word
+            ##clean up session_state for challenge
+            st.session_state.current_word = None
+            st.session_state.current_letter_index = 0
+            st.session_state.letter_scores = []
+            st.session_state.selected_game_image = random.choice(st.session_state.game_files)
+            predicted_letter_placeholder.empty()
+            st.session_state.user_gives_up = False
+            st.session_state.challenge_completed = False
 
 
 # Function to display the API URL (for debugging)
