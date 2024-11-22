@@ -184,7 +184,7 @@ def calculate_score(predicted_letter, required_letter, confidence):
 # Home Page functionality
 if page == "Home Page":
     st.title("Show hands and learn how to sign!")
-    st.write("Take a picture with the computer camera, or upload a file and try to mimic the signs on the left.")
+    st.write("Take a picture using your web cam and try to mimic the signs on the left.")
 
     # Camera and image input layout
     image_col, camera_col = st.columns([2, 10])
