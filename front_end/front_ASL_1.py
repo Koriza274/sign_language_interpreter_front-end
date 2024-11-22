@@ -14,7 +14,7 @@ from video_section import display_video_section
 # API URL from secrets
 api_url = st.secrets["API_URL"]
 # Sidebar Navigation
-page = st.sidebar.radio("Navigate", ["Home Page", "Game On!"])
+page = st.sidebar.radio("Navigate", ["ABC", "Game On!"])
 
 # Sidebar with project information
 st.sidebar.title("Project Information")
@@ -65,7 +65,7 @@ if "java_clear_script" not in st.session_state:
     st.session_state.java_clear_script = False
 # Initialize session state for page-specific keys
 if "page_key" not in st.session_state:
-    st.session_state.page_key = {"Home Page": 0, "Game On!": 0}  # Separate keys for pages
+    st.session_state.page_key = {"ABC": 0, "Game On!": 0}  # Separate keys for pages
 if "user_gives_up" not in st.session_state:
     st.session_state.user_gives_up = False
 if "challenge_completed" not in st.session_state:
@@ -199,7 +199,7 @@ if page == "ABC":
 
     with camera_col:
         # Camera input
-        camera_image = st.camera_input("Take a picture", key=f"camera_1_{st.session_state.page_key['Home Page']}")
+        camera_image = st.camera_input("Take a picture", key=f"camera_1_{st.session_state.page_key['ABC']}")
 
     hand_region = None
     if camera_image:
@@ -235,7 +235,7 @@ if page == "ABC":
 elif page == "Game On!":
     st.title("Game On!")
 
-    reset_camera("Home Page")
+    reset_camera("ABC")
 
     # Initialize session state variables
     if "current_word" not in st.session_state:
