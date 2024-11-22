@@ -17,19 +17,22 @@ api_url = st.secrets["API_URL"]
 page = st.sidebar.radio("Navigate", ["Home Page", "Game On!"])
 
 # Sidebar with project information
-st.sidebar.title("Project Information")
+st.sidebar.title("Learn American Sign Language")
 st.sidebar.write("""
-**Project Name**: Sign Language Recognition
+**Goal**: This project is designed to help users learn the American Sign Language (ASL) alphabet by recognizing and mimicking gestures for each letter. It also features an interactive game mode where users can practice spelling words using ASL.
 
-**Goal**: Develop a model to recognize sign language using computer vision and machine learning techniques.
-
-**Course**: LeWagon #1705 (Diana, Robert, Jean-Michel, Gabriel & Boris).
+**Background**: This project was developed as part of the LeWagon #1705 course by the following contributors:
+- [Jean-Michel](https://github.com/JMLejeune-evolvi)
+- [Diana](https://github.com/Koriza274/)
+- [Robert](https://github.com/ropath)
+- [Gabriel](https://github.com/gabrielrehder)
+- [Boris](https://github.com/just1984)
 
 **Technologies Used**:
-- Python for scripting and data processing
-- Mediapipe and OpenCV for image processing and hand landmark detection
-- TensorFlow for machine learning model development
-- Streamlit for the web interface
+- **Python**: For scripting and data processing
+- **Mediapipe & OpenCV**: For image processing and hand landmark detection
+- **TensorFlow**: For building and training the recognition model
+- **Streamlit**: For creating an interactive web interface
 """)
 
 #IMAGE_FOLDER = os.path.join(os.getcwd(), 'asl')
