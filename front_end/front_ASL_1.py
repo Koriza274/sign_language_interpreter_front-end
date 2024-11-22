@@ -1,15 +1,4 @@
 import streamlit as st
-
-st.markdown("""
-    <style>
-    div[data-testid="stAppViewContainer"] {
-        max-width: 95%;
-        margin-left: 0;
-        margin-right: auto;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 import numpy as np
 import time
 from PIL import Image
