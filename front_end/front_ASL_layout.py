@@ -23,14 +23,13 @@ def adjust_brightness_contrast(image, brightness=40, contrast=1.0):
     """
     Adjust the brightness and contrast of an image.
     """
-    if not isinstance(image, Image.Image):
-        image = Image.open(BytesIO(image.getvalue()))
+    image = image.getvalue()
+    image = Image.open(BytesIO(image))
+    image = np.array(image)
 
-    img = np.array(image).astype(np.float32)
-
+    img = image.astype(np.float32)
     img = img * contrast + brightness
     img = np.clip(img, 0, 255).astype(np.uint8)
 
-    adjusted_image = Image.fromarray(img)
 
-    return adjusted_image
+    return img
