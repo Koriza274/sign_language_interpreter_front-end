@@ -35,9 +35,9 @@ st.sidebar.write("""
 #IMAGE_FOLDER = os.path.join(os.getcwd(), 'asl')
 #GAME_IMAGES = os.path.join(os.getcwd(), 'game_images')
 
-IMAGE_FOLDER = os.path.join(os.getcwd(), 'font_end/asl')
-GAME_IMAGES = os.path.join(os.getcwd(),  'font_end/game_images')
-VIDEO_FOLDER = os.path.join(os.getcwd(), 'font_end/videos')
+IMAGE_FOLDER = os.path.join(os.getcwd(), 'asl')
+GAME_IMAGES = os.path.join(os.getcwd(),  'game_images')
+VIDEO_FOLDER = os.path.join(os.getcwd(), 'videos')
 
 if "image_files" not in st.session_state:
     # Display reference images for letter signs
