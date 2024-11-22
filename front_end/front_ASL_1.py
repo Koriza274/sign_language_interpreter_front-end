@@ -192,9 +192,8 @@ if page == "Home Page":
 #    IMAGE_FOLDER = "asl"
     image_files = [os.path.join(IMAGE_FOLDER, f) for f in os.listdir(IMAGE_FOLDER) if f.endswith('.png')]
 
-    image_col, camera_col = st.columns([2, 10])
+    image_col, camera_col = st.columns([4, 8])
 
-    # Linke Spalte mit Bildern, Refresh-Button und Dropdown-Menü
     with image_col:
         # Zeige die drei zufälligen Bilder
         for img_path in st.session_state.random_images:
@@ -205,9 +204,8 @@ if page == "Home Page":
         if st.button("Refresh"):
             st.session_state.random_images = random.sample(image_files, 3)
 
-        # Dropdown-Menü für Referenzbilder
-        st.markdown("## Reference Images for Letter Signs")
-        with st.expander("Click to open"):
+        # st.markdown("## Reference Images for Letter Signs")
+        with st.expander("ABC"):
             cols = st.columns(4)
             for i, img_path in enumerate(st.session_state.image_files):
                 with cols[i % 4]:
