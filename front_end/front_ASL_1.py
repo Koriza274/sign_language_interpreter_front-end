@@ -234,6 +234,17 @@ if page == "Home Page":
     else:
         st.write("No hand detected in the image.")
 
+    st.markdown("### Adjust Image Settings")
+    st.write("If your image is too dark or bright, you can adjust it here using these sliders.")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        bright = st.slider("Brightness", 10, 60, step=10, value=30)
+
+    with col2:
+        contrast = st.slider("Contrast", 0.5, 1.5, step=0.25, value=1.0)
+
 
 
 # Game On! functionality
