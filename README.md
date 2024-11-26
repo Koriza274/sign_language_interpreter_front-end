@@ -41,9 +41,14 @@ Alternatively, you can use the make install command to install all the necessary
 ### Installation
 
 #### 1. Clone the Repository
-
+For back-end:
 ```bash
 git clone https://github.com/Koriza274/sign_language_interpreter.git
+cd sign_language_interpreter
+```
+For front-end:
+```bash
+git clone https://github.com/Koriza274/sign_language_interpreter_front-end.git
 cd sign_language_interpreter
 ```
 
