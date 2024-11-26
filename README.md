@@ -60,7 +60,6 @@ Use the provided `requirements.txt` to install necessary Python packages.
 make install
 ```
 
-*Alternatively, if issues arise with version compatibility, try using `requirements_1.txt`.*
 
 #### 3. System Dependencies
 
@@ -93,7 +92,7 @@ streamlit run front_ASL_1.py
 
 #### 3. Configuration
 
-The application uses environment variables. You may configure these in a `.env` file. Refer to `params.py` for possible parameters that may be required.
+The application uses environment variables. You may configure these in a `.env` file. 
 
 ---
 
