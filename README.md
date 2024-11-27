@@ -4,6 +4,9 @@ This project is the final project of the Data Science course by LeWagon, Batch 1
 
 This is the front-end repo. See the back-end repo [here](https://github.com/Koriza274/sign_language_interpreter). This readme file covers the whole project.
 
+The repo for word recognition that is used in this front-end is [here](https://github.com/Koriza274/asl_words_interpreter).
+
+
 ## Table of Contents
 
 1. [Features](#features)
@@ -118,7 +121,7 @@ This will expose the FastAPI backend on port 8000. To access the Streamlit inter
 
 ### License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. 
 
 ---
 
